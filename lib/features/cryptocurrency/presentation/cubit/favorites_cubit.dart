@@ -38,7 +38,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
 
     result.fold((failure) => emit(FavoritesError(failure.message)), (_) {
       emit(const FavoriteActionSuccess('Adicionado aos favoritos!'));
-      loadFavorites(); // Recarregar a lista
+      loadFavorites();
     });
   }
 
@@ -47,7 +47,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
 
     result.fold((failure) => emit(FavoritesError(failure.message)), (_) {
       emit(const FavoriteActionSuccess('Removido dos favoritos!'));
-      loadFavorites(); // Recarregar a lista
+      loadFavorites();
     });
   }
 

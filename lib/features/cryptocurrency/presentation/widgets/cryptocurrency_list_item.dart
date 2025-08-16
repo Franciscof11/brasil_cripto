@@ -30,7 +30,6 @@ class CryptocurrencyListItem extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              // Logo
               if (cryptocurrency.image != null)
                 CachedNetworkImage(
                   imageUrl: cryptocurrency.image!,
@@ -65,10 +64,7 @@ class CryptocurrencyListItem extends StatelessWidget {
                   ),
                   child: const Icon(Icons.currency_bitcoin),
                 ),
-
               const SizedBox(width: 12),
-
-              // Nome e símbolo
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,8 +114,6 @@ class CryptocurrencyListItem extends StatelessWidget {
                   ],
                 ),
               ),
-
-              // Preço e variação
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -138,8 +132,8 @@ class CryptocurrencyListItem extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: cryptocurrency.isPriceIncreasing
-                          ? Colors.green.withOpacity(0.1)
-                          : Colors.red.withOpacity(0.1),
+                          ? Colors.green.withValues(alpha: 0.1)
+                          : Colors.red.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
@@ -155,8 +149,6 @@ class CryptocurrencyListItem extends StatelessWidget {
                   ),
                 ],
               ),
-
-              // Botão de favorito
               const SizedBox(width: 8),
               IconButton(
                 onPressed: onFavoriteToggle,

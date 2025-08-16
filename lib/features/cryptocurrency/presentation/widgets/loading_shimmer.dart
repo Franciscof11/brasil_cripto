@@ -19,7 +19,6 @@ class LoadingShimmer extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  // Logo placeholder
                   Container(
                     width: 40,
                     height: 40,
@@ -31,7 +30,6 @@ class LoadingShimmer extends StatelessWidget {
 
                   const SizedBox(width: 12),
 
-                  // Nome e símbolo placeholder
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,7 +45,6 @@ class LoadingShimmer extends StatelessWidget {
                     ),
                   ),
 
-                  // Preço placeholder
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -59,7 +56,6 @@ class LoadingShimmer extends StatelessWidget {
 
                   const SizedBox(width: 8),
 
-                  // Botão de favorito placeholder
                   Container(
                     width: 40,
                     height: 40,
