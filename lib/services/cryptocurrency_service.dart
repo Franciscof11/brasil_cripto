@@ -2,26 +2,18 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../../../../core/constants/api_constants.dart';
-import '../../../../core/errors/exceptions.dart';
-import '../models/cryptocurrency_model.dart';
+import '../core/constants/api_constants.dart';
+import '../models/cryptocurrency.dart';
 
-abstract class CryptocurrencyRemoteDataSource {
-  Future<List<CryptocurrencyModel>> getTopCryptocurrencies();
-  Future<List<CryptocurrencyModel>> searchCryptocurrencies(String query);
-  Future<CryptocurrencyModel> getCryptocurrencyDetails(String id);
-}
+class CryptocurrencyService {
+  final http.Client _client;
 
-class CryptocurrencyRemoteDataSourceImpl
-    implements CryptocurrencyRemoteDataSource {
-  final http.Client client;
+  CryptocurrencyService({http.Client? client})
+    : _client = client ?? http.Client();
 
-  CryptocurrencyRemoteDataSourceImpl({required this.client});
-
-  @override
-  Future<List<CryptocurrencyModel>> getTopCryptocurrencies() async {
+  Future<List<Cryptocurrency>> getTopCryptocurrencies() async {
     try {
-      final response = await client.get(
+      final response = await _client.get(
         Uri.parse(
           '${ApiConstants.baseUrl}${ApiConstants.coinsMarkets}',
         ).replace(
@@ -40,24 +32,20 @@ class CryptocurrencyRemoteDataSourceImpl
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = json.decode(response.body);
-        return jsonList
-            .map((json) => CryptocurrencyModel.fromJson(json))
-            .toList();
+        return jsonList.map((json) => Cryptocurrency.fromJson(json)).toList();
       } else {
-        throw ServerException(
+        throw Exception(
           'Failed to load cryptocurrencies: ${response.statusCode}',
         );
       }
     } catch (e) {
-      if (e is ServerException) rethrow;
-      throw NetworkException('Network error: ${e.toString()}');
+      throw Exception('Network error: ${e.toString()}');
     }
   }
 
-  @override
-  Future<List<CryptocurrencyModel>> searchCryptocurrencies(String query) async {
+  Future<List<Cryptocurrency>> searchCryptocurrencies(String query) async {
     try {
-      final response = await client.get(
+      final response = await _client.get(
         Uri.parse(
           '${ApiConstants.baseUrl}${ApiConstants.search}',
         ).replace(queryParameters: {'query': query}),
@@ -68,11 +56,11 @@ class CryptocurrencyRemoteDataSourceImpl
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
         final List<dynamic> coins = jsonResponse['coins'] ?? [];
 
-        final List<CryptocurrencyModel> cryptocurrencies = [];
+        final List<Cryptocurrency> cryptocurrencies = [];
 
         for (final coin in coins.take(20)) {
           try {
-            final detailedResponse = await client.get(
+            final detailedResponse = await _client.get(
               Uri.parse(
                 '${ApiConstants.baseUrl}${ApiConstants.coinsMarkets}',
               ).replace(
@@ -96,7 +84,7 @@ class CryptocurrencyRemoteDataSourceImpl
               );
               if (detailedJsonList.isNotEmpty) {
                 cryptocurrencies.add(
-                  CryptocurrencyModel.fromJson(detailedJsonList.first),
+                  Cryptocurrency.fromJson(detailedJsonList.first),
                 );
               }
             }
@@ -107,20 +95,18 @@ class CryptocurrencyRemoteDataSourceImpl
 
         return cryptocurrencies;
       } else {
-        throw ServerException(
+        throw Exception(
           'Failed to search cryptocurrencies: ${response.statusCode}',
         );
       }
     } catch (e) {
-      if (e is ServerException) rethrow;
-      throw NetworkException('Network error: ${e.toString()}');
+      throw Exception('Network error: ${e.toString()}');
     }
   }
 
-  @override
-  Future<CryptocurrencyModel> getCryptocurrencyDetails(String id) async {
+  Future<Cryptocurrency> getCryptocurrencyDetails(String id) async {
     try {
-      final response = await client.get(
+      final response = await _client.get(
         Uri.parse(
           '${ApiConstants.baseUrl}${ApiConstants.coinDetails}/$id',
         ).replace(
@@ -138,15 +124,14 @@ class CryptocurrencyRemoteDataSourceImpl
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        return CryptocurrencyModel.fromDetailedJson(jsonResponse);
+        return Cryptocurrency.fromDetailedJson(jsonResponse);
       } else {
-        throw ServerException(
+        throw Exception(
           'Failed to load cryptocurrency details: ${response.statusCode}',
         );
       }
     } catch (e) {
-      if (e is ServerException) rethrow;
-      throw NetworkException('Network error: ${e.toString()}');
+      throw Exception('Network error: ${e.toString()}');
     }
   }
 }

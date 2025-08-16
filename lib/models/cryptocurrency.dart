@@ -1,11 +1,10 @@
+import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 
-import '../../domain/entities/cryptocurrency.dart';
-
-part 'cryptocurrency_model.g.dart';
+part 'cryptocurrency.g.dart';
 
 @HiveType(typeId: 0)
-class CryptocurrencyModel extends Cryptocurrency {
+class Cryptocurrency extends Equatable {
   @HiveField(0)
   final String id;
   @HiveField(1)
@@ -41,7 +40,7 @@ class CryptocurrencyModel extends Cryptocurrency {
   @HiveField(16)
   final DateTime lastUpdated;
 
-  const CryptocurrencyModel({
+  const Cryptocurrency({
     required this.id,
     required this.symbol,
     required this.name,
@@ -59,28 +58,67 @@ class CryptocurrencyModel extends Cryptocurrency {
     this.atl,
     this.atlDate,
     required this.lastUpdated,
-  }) : super(
-         id: id,
-         symbol: symbol,
-         name: name,
-         image: image,
-         currentPrice: currentPrice,
-         priceChangePercentage24h: priceChangePercentage24h,
-         marketCap: marketCap,
-         marketCapRank: marketCapRank,
-         totalVolume: totalVolume,
-         high24h: high24h,
-         low24h: low24h,
-         description: description,
-         ath: ath,
-         athDate: athDate,
-         atl: atl,
-         atlDate: atlDate,
-         lastUpdated: lastUpdated,
-       );
+  });
 
-  factory CryptocurrencyModel.fromJson(Map<String, dynamic> json) {
-    return CryptocurrencyModel(
+  @override
+  List<Object?> get props => [
+    id,
+    symbol,
+    name,
+    image,
+    currentPrice,
+    priceChangePercentage24h,
+    marketCap,
+    marketCapRank,
+    totalVolume,
+    high24h,
+    low24h,
+    description,
+    ath,
+    athDate,
+    atl,
+    atlDate,
+    lastUpdated,
+  ];
+
+  bool get isPriceIncreasing => (priceChangePercentage24h ?? 0) > 0;
+
+  String get formattedPrice {
+    if (currentPrice == null) return '--';
+    return '\$${currentPrice!.toStringAsFixed(currentPrice! < 1 ? 6 : 2)}';
+  }
+
+  String get formattedPriceChange {
+    if (priceChangePercentage24h == null) return '--';
+    final change = priceChangePercentage24h!;
+    final prefix = change > 0 ? '+' : '';
+    return '$prefix${change.toStringAsFixed(2)}%';
+  }
+
+  String get formattedMarketCap {
+    if (marketCap == null) return '--';
+    if (marketCap! >= 1e12) {
+      return '\$${(marketCap! / 1e12).toStringAsFixed(2)}T';
+    } else if (marketCap! >= 1e9) {
+      return '\$${(marketCap! / 1e9).toStringAsFixed(2)}B';
+    } else if (marketCap! >= 1e6) {
+      return '\$${(marketCap! / 1e6).toStringAsFixed(2)}M';
+    }
+    return '\$${marketCap!.toStringAsFixed(0)}';
+  }
+
+  String get formattedVolume {
+    if (totalVolume == null) return '--';
+    if (totalVolume! >= 1e9) {
+      return '\$${(totalVolume! / 1e9).toStringAsFixed(2)}B';
+    } else if (totalVolume! >= 1e6) {
+      return '\$${(totalVolume! / 1e6).toStringAsFixed(2)}M';
+    }
+    return '\$${totalVolume!.toStringAsFixed(0)}';
+  }
+
+  factory Cryptocurrency.fromJson(Map<String, dynamic> json) {
+    return Cryptocurrency(
       id: json['id'] as String,
       symbol: json['symbol'] as String,
       name: json['name'] as String,
@@ -104,8 +142,8 @@ class CryptocurrencyModel extends Cryptocurrency {
     );
   }
 
-  factory CryptocurrencyModel.fromDetailedJson(Map<String, dynamic> json) {
-    return CryptocurrencyModel(
+  factory Cryptocurrency.fromDetailedJson(Map<String, dynamic> json) {
+    return Cryptocurrency(
       id: json['id'] as String,
       symbol: json['symbol'] as String,
       name: json['name'] as String,
@@ -151,25 +189,44 @@ class CryptocurrencyModel extends Cryptocurrency {
     };
   }
 
-  factory CryptocurrencyModel.fromEntity(Cryptocurrency entity) {
-    return CryptocurrencyModel(
-      id: entity.id,
-      symbol: entity.symbol,
-      name: entity.name,
-      image: entity.image,
-      currentPrice: entity.currentPrice,
-      priceChangePercentage24h: entity.priceChangePercentage24h,
-      marketCap: entity.marketCap,
-      marketCapRank: entity.marketCapRank,
-      totalVolume: entity.totalVolume,
-      high24h: entity.high24h,
-      low24h: entity.low24h,
-      description: entity.description,
-      ath: entity.ath,
-      athDate: entity.athDate,
-      atl: entity.atl,
-      atlDate: entity.atlDate,
-      lastUpdated: entity.lastUpdated,
+  Cryptocurrency copyWith({
+    String? id,
+    String? symbol,
+    String? name,
+    String? image,
+    double? currentPrice,
+    double? priceChangePercentage24h,
+    double? marketCap,
+    int? marketCapRank,
+    double? totalVolume,
+    double? high24h,
+    double? low24h,
+    String? description,
+    double? ath,
+    String? athDate,
+    double? atl,
+    String? atlDate,
+    DateTime? lastUpdated,
+  }) {
+    return Cryptocurrency(
+      id: id ?? this.id,
+      symbol: symbol ?? this.symbol,
+      name: name ?? this.name,
+      image: image ?? this.image,
+      currentPrice: currentPrice ?? this.currentPrice,
+      priceChangePercentage24h:
+          priceChangePercentage24h ?? this.priceChangePercentage24h,
+      marketCap: marketCap ?? this.marketCap,
+      marketCapRank: marketCapRank ?? this.marketCapRank,
+      totalVolume: totalVolume ?? this.totalVolume,
+      high24h: high24h ?? this.high24h,
+      low24h: low24h ?? this.low24h,
+      description: description ?? this.description,
+      ath: ath ?? this.ath,
+      athDate: athDate ?? this.athDate,
+      atl: atl ?? this.atl,
+      atlDate: atlDate ?? this.atlDate,
+      lastUpdated: lastUpdated ?? this.lastUpdated,
     );
   }
 }

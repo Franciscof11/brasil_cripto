@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/cryptocurrency.dart';
+import '../../models/cryptocurrency.dart';
 
 class CryptocurrencyListItem extends StatelessWidget {
   final Cryptocurrency cryptocurrency;

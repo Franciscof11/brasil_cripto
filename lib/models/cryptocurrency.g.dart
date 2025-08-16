@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'cryptocurrency_model.dart';
+part of 'cryptocurrency.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class CryptocurrencyModelAdapter extends TypeAdapter<CryptocurrencyModel> {
+class CryptocurrencyAdapter extends TypeAdapter<Cryptocurrency> {
   @override
   final int typeId = 0;
 
   @override
-  CryptocurrencyModel read(BinaryReader reader) {
+  Cryptocurrency read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return CryptocurrencyModel(
+    return Cryptocurrency(
       id: fields[0] as String,
       symbol: fields[1] as String,
       name: fields[2] as String,
@@ -38,7 +38,7 @@ class CryptocurrencyModelAdapter extends TypeAdapter<CryptocurrencyModel> {
   }
 
   @override
-  void write(BinaryWriter writer, CryptocurrencyModel obj) {
+  void write(BinaryWriter writer, Cryptocurrency obj) {
     writer
       ..writeByte(17)
       ..writeByte(0)
@@ -83,7 +83,7 @@ class CryptocurrencyModelAdapter extends TypeAdapter<CryptocurrencyModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CryptocurrencyModelAdapter &&
+      other is CryptocurrencyAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

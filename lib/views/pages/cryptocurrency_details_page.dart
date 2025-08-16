@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
-import '../cubit/details_cubit.dart';
-import '../cubit/details_state.dart';
+import '../../viewmodels/cryptocurrency_details_viewmodel.dart';
 import '../widgets/info_card_widget.dart';
 import '../widgets/price_chart_widget.dart';
 
@@ -21,20 +20,24 @@ class _CryptocurrencyDetailsPageState extends State<CryptocurrencyDetailsPage> {
   @override
   void initState() {
     super.initState();
-    context.read<DetailsCubit>().loadCryptocurrencyDetails(widget.cryptoId);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CryptocurrencyDetailsViewModel>().loadCryptocurrencyDetails(
+        widget.cryptoId,
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      body: BlocBuilder<DetailsCubit, DetailsState>(
-        builder: (context, state) {
-          return switch (state) {
-            DetailsLoading() => const Scaffold(
+      body: Consumer<CryptocurrencyDetailsViewModel>(
+        builder: (context, viewModel, child) {
+          return switch (viewModel) {
+            _ when viewModel.isLoading => const Scaffold(
               body: Center(child: CircularProgressIndicator()),
             ),
-            DetailsError() => Scaffold(
+            _ when viewModel.error != null => Scaffold(
               appBar: AppBar(
                 title: const Text('Erro'),
                 backgroundColor: Theme.of(context).primaryColor,
@@ -52,16 +55,14 @@ class _CryptocurrencyDetailsPageState extends State<CryptocurrencyDetailsPage> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      state.message,
+                      viewModel.error!,
                       style: TextStyle(color: Colors.grey[600]),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () {
-                        context.read<DetailsCubit>().loadCryptocurrencyDetails(
-                          widget.cryptoId,
-                        );
+                        viewModel.loadCryptocurrencyDetails(widget.cryptoId);
                       },
                       child: const Text('Tentar Novamente'),
                     ),
@@ -69,7 +70,9 @@ class _CryptocurrencyDetailsPageState extends State<CryptocurrencyDetailsPage> {
                 ),
               ),
             ),
-            DetailsLoaded() => _buildLoadedContent(state),
+            _ when viewModel.cryptocurrency != null => _buildLoadedContent(
+              viewModel,
+            ),
             _ => const SizedBox.shrink(),
           };
         },
@@ -77,9 +80,9 @@ class _CryptocurrencyDetailsPageState extends State<CryptocurrencyDetailsPage> {
     );
   }
 
-  Widget _buildLoadedContent(DetailsLoaded state) {
-    final crypto = state.cryptocurrency;
-    final isFavorite = state.isFavorite;
+  Widget _buildLoadedContent(CryptocurrencyDetailsViewModel viewModel) {
+    final crypto = viewModel.cryptocurrency!;
+    final isFavorite = viewModel.isFavorite;
 
     return CustomScrollView(
       slivers: [
@@ -191,9 +194,7 @@ class _CryptocurrencyDetailsPageState extends State<CryptocurrencyDetailsPage> {
           ),
           actions: [
             IconButton(
-              onPressed: () {
-                context.read<DetailsCubit>().toggleFavorite();
-              },
+              onPressed: viewModel.toggleFavorite,
               icon: Icon(
                 isFavorite ? Icons.favorite : Icons.favorite_border,
                 color: isFavorite ? Colors.red : Colors.white,
