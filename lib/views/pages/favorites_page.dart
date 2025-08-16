@@ -61,6 +61,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
         final crypto = viewModel.favorites[index];
         return CryptocurrencyListItem(
           cryptocurrency: crypto,
+          isFavorite: true,
           onTap: () {
             Navigator.pushNamed(context, '/details', arguments: crypto.id);
           },

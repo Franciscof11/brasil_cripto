@@ -22,6 +22,7 @@ class _CryptocurrencyListPageState extends State<CryptocurrencyListPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<CryptocurrencyViewModel>().loadTopCryptocurrencies();
+      context.read<FavoritesViewModel>().loadFavorites();
     });
   }
 
@@ -108,8 +109,10 @@ class _CryptocurrencyListPageState extends State<CryptocurrencyListPage> {
       itemCount: cryptocurrencies.length,
       itemBuilder: (context, index) {
         final crypto = cryptocurrencies[index];
+        final isFavorite = favoritesViewModel.isFavorite(crypto.id);
         return CryptocurrencyListItem(
           cryptocurrency: crypto,
+          isFavorite: isFavorite,
           onTap: () {
             Navigator.pushNamed(context, '/details', arguments: crypto.id);
           },
