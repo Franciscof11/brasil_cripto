@@ -34,7 +34,7 @@ flutter run
 
 ## 📦 Download APK
 
-APK pronto para instalação disponível em: **`release/apk/brasil-cripto-v1.0.0.apk`** (~21MB)
+APK pronto para instalação disponível em: **`release/apk/brasil-cripto-v1.0.1.apk`** (~22MB)
 
 ## 🎯 Destaques
 
