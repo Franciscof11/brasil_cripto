@@ -1,30 +1,25 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Purple shades
   static const Color primaryPurple = Color(0xFF6A1B9A);
   static const Color darkPurple = Color(0xFF4A148C);
   static const Color lightPurple = Color(0xFF9C27B0);
 
-  // Burnt yellow shades
   static const Color burntYellow = Color(0xFFD4A574);
   static const Color darkBurntYellow = Color(0xFFB8935A);
   static const Color lightBurntYellow = Color(0xFFE6C896);
 
-  // Black and grays
   static const Color black = Color(0xFF000000);
   static const Color darkGray = Color(0xFF1A1A1A);
   static const Color mediumGray = Color(0xFF424242);
   static const Color lightGray = Color(0xFF757575);
 
-  // Additional colors
   static const Color white = Color(0xFFFFFFFF);
   static const Color lightBackground = Color(0xFFF5F5F5);
   static const Color darkBackground = Color(0xFF121212);
   static const Color cardLightBackground = Color(0xFFFFFFFF);
   static const Color cardDarkBackground = Color(0xFF1E1E1E);
 
-  // Status colors
   static const Color success = Color(0xFF4CAF50);
   static const Color error = Color(0xFFE53E3E);
   static const Color warning = Color(0xFFFF9800);
@@ -63,7 +58,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         elevation: 4,
         color: AppColors.cardLightBackground,
-        shadowColor: AppColors.primaryPurple.withOpacity(0.1),
+        shadowColor: AppColors.primaryPurple.withValues(alpha: 0.1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -173,7 +168,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         elevation: 4,
         color: AppColors.cardDarkBackground,
-        shadowColor: AppColors.lightPurple.withOpacity(0.2),
+        shadowColor: AppColors.lightPurple.withValues(alpha: 0.2),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(

@@ -29,16 +29,13 @@ class BrasilCriptoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // Theme Provider
         ChangeNotifierProvider<ThemeProvider>(
           create: (_) => ThemeProvider()..init(),
         ),
 
-        // Services
         Provider<CryptocurrencyService>(create: (_) => CryptocurrencyService()),
         Provider<FavoritesService>(create: (_) => FavoritesService()),
 
-        // ViewModels
         ChangeNotifierProvider<CryptocurrencyViewModel>(
           create: (context) => CryptocurrencyViewModel(
             cryptocurrencyService: context.read<CryptocurrencyService>(),
