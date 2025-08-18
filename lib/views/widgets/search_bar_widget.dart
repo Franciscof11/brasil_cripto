@@ -18,38 +18,46 @@ class SearchBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: TextField(
         controller: controller,
         onChanged: onChanged,
+        onTapOutside: (event) => FocusScope.of(context).unfocus(),
+        style: Theme.of(context).textTheme.bodyLarge,
         decoration: InputDecoration(
           hintText: 'Pesquisar criptomoedas...',
-          hintStyle: TextStyle(color: Colors.grey[500]),
-          prefixIcon: Icon(Icons.search, color: Colors.grey[500]),
+          hintStyle: Theme.of(context).textTheme.bodyMedium,
+          prefixIcon: Icon(
+            Icons.search,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
           suffixIcon: isSearching
               ? IconButton(
                   onPressed: onClear,
-                  icon: Icon(Icons.clear, color: Colors.grey[500]),
+                  icon: Icon(
+                    Icons.clear,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
                 )
               : null,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
             borderSide: BorderSide.none,
           ),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: Theme.of(context).colorScheme.surface,
           contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 12,
+            horizontal: 20,
+            vertical: 16,
           ),
         ),
       ),

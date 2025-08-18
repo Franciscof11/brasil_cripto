@@ -6,6 +6,7 @@ import '../../viewmodels/favorites_viewmodel.dart';
 import '../widgets/cryptocurrency_list_item.dart';
 import '../widgets/loading_shimmer.dart';
 import '../widgets/search_bar_widget.dart';
+import '../widgets/theme_toggle_widget.dart';
 
 class CryptocurrencyListPage extends StatefulWidget {
   const CryptocurrencyListPage({super.key});
@@ -35,12 +36,9 @@ class _CryptocurrencyListPageState extends State<CryptocurrencyListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: const Text('Brasil Cripto'),
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 0,
+        actions: const [ThemeToggleWidget(), SizedBox(width: 8)],
       ),
       body: Consumer2<CryptocurrencyViewModel, FavoritesViewModel>(
         builder: (context, cryptoViewModel, favoritesViewModel, child) {
@@ -48,11 +46,24 @@ class _CryptocurrencyListPageState extends State<CryptocurrencyListPage> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Theme.of(context).scaffoldBackgroundColor
+                      : Theme.of(context).primaryColor,
                   borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
+                    bottomLeft: Radius.circular(24),
+                    bottomRight: Radius.circular(24),
                   ),
+                  boxShadow: Theme.of(context).brightness == Brightness.dark
+                      ? null
+                      : [
+                          BoxShadow(
+                            color: Theme.of(
+                              context,
+                            ).primaryColor.withValues(alpha: 0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                 ),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -84,7 +95,7 @@ class _CryptocurrencyListPageState extends State<CryptocurrencyListPage> {
     CryptocurrencyViewModel cryptoViewModel,
     FavoritesViewModel favoritesViewModel,
   ) {
-    if (cryptoViewModel.isLoading) {
+    if (cryptoViewModel.isLoading || cryptoViewModel.isSearching) {
       return const LoadingShimmer();
     }
 
@@ -100,7 +111,7 @@ class _CryptocurrencyListPageState extends State<CryptocurrencyListPage> {
         ? cryptoViewModel.searchResults
         : cryptoViewModel.cryptocurrencies;
 
-    if (cryptocurrencies.isEmpty) {
+    if (cryptocurrencies.isEmpty && cryptoViewModel.searchQuery.isEmpty) {
       return _buildEmptyWidget();
     }
 
@@ -125,28 +136,38 @@ class _CryptocurrencyListPageState extends State<CryptocurrencyListPage> {
   }
 
   Widget _buildErrorWidget(CryptocurrencyViewModel viewModel) {
+    final isSearchError = viewModel.searchQuery.isNotEmpty;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: Theme.of(context).colorScheme.error,
+            ),
             const SizedBox(height: 16),
             Text(
-              'Erro ao carregar dados',
+              isSearchError ? 'Erro na busca' : 'Erro ao carregar dados',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 8),
             Text(
               viewModel.error ?? 'Erro desconhecido',
-              style: TextStyle(color: Colors.grey[600]),
+              style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: viewModel.refresh,
-              child: const Text('Tentar Novamente'),
+              onPressed: isSearchError
+                  ? () =>
+                        viewModel.searchCryptocurrencies(viewModel.searchQuery)
+                  : viewModel.refresh,
+              child: Text(
+                isSearchError ? 'Tentar Busca Novamente' : 'Tentar Novamente',
+              ),
             ),
           ],
         ),
@@ -161,7 +182,11 @@ class _CryptocurrencyListPageState extends State<CryptocurrencyListPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
+            Icon(
+              Icons.search_off,
+              size: 64,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
             const SizedBox(height: 16),
             Text(
               'Nenhum resultado encontrado',
@@ -170,7 +195,7 @@ class _CryptocurrencyListPageState extends State<CryptocurrencyListPage> {
             const SizedBox(height: 8),
             Text(
               'Tente pesquisar por outro termo',
-              style: TextStyle(color: Colors.grey[600]),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
         ),
@@ -185,7 +210,11 @@ class _CryptocurrencyListPageState extends State<CryptocurrencyListPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.currency_bitcoin, size: 64, color: Colors.grey[400]),
+            Icon(
+              Icons.currency_bitcoin,
+              size: 64,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
             const SizedBox(height: 16),
             Text(
               'Nenhuma criptomoeda encontrada',
@@ -194,7 +223,7 @@ class _CryptocurrencyListPageState extends State<CryptocurrencyListPage> {
             const SizedBox(height: 8),
             Text(
               'Verifique sua conexão com a internet',
-              style: TextStyle(color: Colors.grey[600]),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
         ),

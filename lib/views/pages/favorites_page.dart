@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../viewmodels/favorites_viewmodel.dart';
 import '../widgets/cryptocurrency_list_item.dart';
+import '../widgets/theme_toggle_widget.dart';
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
@@ -23,12 +24,9 @@ class _FavoritesPageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: const Text('Favoritos'),
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 0,
+        actions: const [ThemeToggleWidget(), SizedBox(width: 8)],
       ),
       body: Consumer<FavoritesViewModel>(
         builder: (context, viewModel, child) {
@@ -80,7 +78,11 @@ class _FavoritesPageState extends State<FavoritesPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: Theme.of(context).colorScheme.error,
+            ),
             const SizedBox(height: 16),
             Text(
               'Erro ao carregar favoritos',
@@ -89,7 +91,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
             const SizedBox(height: 8),
             Text(
               viewModel.error ?? 'Erro desconhecido',
-              style: TextStyle(color: Colors.grey[600]),
+              style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -110,7 +112,11 @@ class _FavoritesPageState extends State<FavoritesPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.favorite_border, size: 64, color: Colors.grey[400]),
+            Icon(
+              Icons.favorite_border,
+              size: 64,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
             const SizedBox(height: 16),
             Text(
               'Nenhum favorito ainda',
@@ -119,7 +125,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
             const SizedBox(height: 8),
             Text(
               'Adicione criptomoedas aos seus favoritos para vê-las aqui',
-              style: TextStyle(color: Colors.grey[600]),
+              style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
           ],

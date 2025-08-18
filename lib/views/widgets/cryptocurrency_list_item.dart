@@ -39,19 +39,29 @@ class CryptocurrencyListItem extends StatelessWidget {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.secondary.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.currency_bitcoin),
+                    child: Icon(
+                      Icons.currency_bitcoin,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
                   ),
                   errorWidget: (context, url, error) => Container(
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.secondary.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.error),
+                    child: Icon(
+                      Icons.error,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
                   ),
                 )
               else
@@ -59,10 +69,15 @@ class CryptocurrencyListItem extends StatelessWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: Colors.grey[300],
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.secondary.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.currency_bitcoin),
+                  child: Icon(
+                    Icons.currency_bitcoin,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
                 ),
               const SizedBox(width: 12),
               Expanded(
@@ -71,8 +86,7 @@ class CryptocurrencyListItem extends StatelessWidget {
                   children: [
                     Text(
                       cryptocurrency.name,
-                      style: const TextStyle(
-                        fontSize: 16,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -82,11 +96,8 @@ class CryptocurrencyListItem extends StatelessWidget {
                       children: [
                         Text(
                           cryptocurrency.symbol.toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.w500),
                         ),
                         if (cryptocurrency.marketCapRank != null) ...[
                           const SizedBox(width: 8),
@@ -96,16 +107,20 @@ class CryptocurrencyListItem extends StatelessWidget {
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.grey[200],
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.secondary.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               '#${cryptocurrency.marketCapRank}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[700],
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                           ),
                         ],
@@ -119,8 +134,7 @@ class CryptocurrencyListItem extends StatelessWidget {
                 children: [
                   Text(
                     cryptocurrency.formattedPrice,
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -154,7 +168,11 @@ class CryptocurrencyListItem extends StatelessWidget {
                 onPressed: onFavoriteToggle,
                 icon: Icon(
                   isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: isFavorite ? Colors.red : Colors.grey[400],
+                  color: isFavorite
+                      ? Colors.red
+                      : Theme.of(
+                          context,
+                        ).iconTheme.color?.withValues(alpha: 0.6),
                 ),
               ),
             ],

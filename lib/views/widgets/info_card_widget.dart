@@ -24,14 +24,16 @@ class InfoCardWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(icon, size: 20, color: Theme.of(context).primaryColor),
+                Icon(
+                  icon,
+                  size: 20,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     title,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -44,7 +46,7 @@ class InfoCardWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: valueColor ?? Colors.black87,
+                color: valueColor ?? Theme.of(context).colorScheme.onSurface,
               ),
             ),
           ],

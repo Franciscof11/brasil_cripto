@@ -30,7 +30,6 @@ class _CryptocurrencyDetailsPageState extends State<CryptocurrencyDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
       body: Consumer<CryptocurrencyDetailsViewModel>(
         builder: (context, viewModel, child) {
           return switch (viewModel) {
@@ -38,16 +37,16 @@ class _CryptocurrencyDetailsPageState extends State<CryptocurrencyDetailsPage> {
               body: Center(child: CircularProgressIndicator()),
             ),
             _ when viewModel.error != null => Scaffold(
-              appBar: AppBar(
-                title: const Text('Erro'),
-                backgroundColor: Theme.of(context).primaryColor,
-                foregroundColor: Colors.white,
-              ),
+              appBar: AppBar(title: const Text('Erro')),
               body: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
+                    Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
                     const SizedBox(height: 16),
                     Text(
                       'Erro ao carregar detalhes',
@@ -56,7 +55,7 @@ class _CryptocurrencyDetailsPageState extends State<CryptocurrencyDetailsPage> {
                     const SizedBox(height: 8),
                     Text(
                       viewModel.error!,
-                      style: TextStyle(color: Colors.grey[600]),
+                      style: Theme.of(context).textTheme.bodyMedium,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
@@ -89,20 +88,17 @@ class _CryptocurrencyDetailsPageState extends State<CryptocurrencyDetailsPage> {
         SliverAppBar(
           expandedHeight: 200,
           pinned: true,
-          backgroundColor: Theme.of(context).primaryColor,
-          foregroundColor: Colors.white,
+          backgroundColor: Theme.of(context).brightness == Brightness.dark
+              ? Theme.of(context).scaffoldBackgroundColor
+              : Theme.of(context).primaryColor,
+          foregroundColor: Theme.of(context).brightness == Brightness.dark
+              ? Theme.of(context).colorScheme.onSurface
+              : Colors.white,
           flexibleSpace: FlexibleSpaceBar(
             background: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Theme.of(context).primaryColor,
-                    Theme.of(context).primaryColor.withValues(alpha: 0.8),
-                  ],
-                ),
-              ),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).scaffoldBackgroundColor
+                  : Theme.of(context).primaryColor,
               child: SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -129,17 +125,30 @@ class _CryptocurrencyDetailsPageState extends State<CryptocurrencyDetailsPage> {
                               children: [
                                 Text(
                                   crypto.name,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    color:
+                                        Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Theme.of(
+                                            context,
+                                          ).colorScheme.onSurface
+                                        : Colors.white,
                                   ),
                                 ),
                                 Text(
                                   crypto.symbol.toUpperCase(),
                                   style: TextStyle(
                                     fontSize: 16,
-                                    color: Colors.white.withValues(alpha: 0.8),
+                                    color:
+                                        Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withValues(alpha: 0.7)
+                                        : Colors.white.withValues(alpha: 0.8),
                                   ),
                                 ),
                               ],
@@ -156,10 +165,16 @@ class _CryptocurrencyDetailsPageState extends State<CryptocurrencyDetailsPage> {
                               children: [
                                 Text(
                                   crypto.formattedPrice,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 28,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    color:
+                                        Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Theme.of(
+                                            context,
+                                          ).colorScheme.onSurface
+                                        : Colors.white,
                                   ),
                                 ),
                                 Container(
@@ -197,7 +212,11 @@ class _CryptocurrencyDetailsPageState extends State<CryptocurrencyDetailsPage> {
               onPressed: viewModel.toggleFavorite,
               icon: Icon(
                 isFavorite ? Icons.favorite : Icons.favorite_border,
-                color: isFavorite ? Colors.red : Colors.white,
+                color: isFavorite
+                    ? Colors.red
+                    : (Theme.of(context).brightness == Brightness.dark
+                          ? Theme.of(context).colorScheme.onSurface
+                          : Colors.white),
               ),
             ),
           ],
@@ -296,7 +315,9 @@ class _CryptocurrencyDetailsPageState extends State<CryptocurrencyDetailsPage> {
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
                         crypto.description!,
-                        style: TextStyle(height: 1.5, color: Colors.grey[700]),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyLarge?.copyWith(height: 1.5),
                       ),
                     ),
                   ),
