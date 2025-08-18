@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
+import 'core/theme/app_theme.dart';
+import 'core/theme/theme_provider.dart';
 import 'models/cryptocurrency.dart';
 import 'services/cryptocurrency_service.dart';
 import 'services/favorites_service.dart';
@@ -27,6 +29,11 @@ class BrasilCriptoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        // Theme Provider
+        ChangeNotifierProvider<ThemeProvider>(
+          create: (_) => ThemeProvider()..init(),
+        ),
+
         // Services
         Provider<CryptocurrencyService>(create: (_) => CryptocurrencyService()),
         Provider<FavoritesService>(create: (_) => FavoritesService()),
@@ -49,36 +56,23 @@ class BrasilCriptoApp extends StatelessWidget {
           ),
         ),
       ],
-      child: MaterialApp(
-        title: 'BrasilCripto',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          primaryColor: const Color(0xFF1976D2),
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          fontFamily: 'Roboto',
-          appBarTheme: const AppBarTheme(elevation: 0, centerTitle: true),
-          cardTheme: CardThemeData(
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ),
-        ),
-        home: const MainPage(),
-        routes: {
-          '/details': (context) {
-            final cryptoId =
-                ModalRoute.of(context)!.settings.arguments as String;
-            return CryptocurrencyDetailsPage(cryptoId: cryptoId);
-          },
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            title: 'BrasilCripto',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: themeProvider.themeMode,
+            home: const MainPage(),
+            routes: {
+              '/details': (context) {
+                final cryptoId =
+                    ModalRoute.of(context)!.settings.arguments as String;
+                return CryptocurrencyDetailsPage(cryptoId: cryptoId);
+              },
+            },
+          );
         },
       ),
     );
